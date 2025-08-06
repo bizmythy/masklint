@@ -8,7 +8,7 @@ use std::{
 };
 
 mod handlers;
-use handlers::{Catchall, LanguageHandler, LintResultType, Rubocop, Ruff, Shellcheck};
+use handlers::{Catchall, LanguageHandler, LintResultType, Nushell, Rubocop, Ruff, Shellcheck};
 
 #[derive(Parser)]
 #[command(author, version, about, long_about = None)]
@@ -106,6 +106,7 @@ fn process_command(
             "sh" | "bash" => &Shellcheck {},
             "py" | "python" => &Ruff {},
             "rb" | "ruby" => &Rubocop {},
+            "nu" | "nushell" => &Nushell {},
             _ => &Catchall {},
         };
 

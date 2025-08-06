@@ -136,3 +136,27 @@ impl LanguageHandler for Rubocop {
         Ok(LintResult::findings(findings))
     }
 }
+
+pub struct Nushell;
+impl Display for Nushell {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "nushell")
+    }
+}
+
+impl LanguageHandler for Nushell {
+    fn file_extension(&self) -> &'static str {
+        ".nu"
+    }
+    fn execute(&self, path: &Path) -> Result<LintResult, io::Error> {
+        let output = Command::new("nu")
+            .arg("-c")
+            .arg(&format!(
+                "if not (nu-check {}) {{ print 'file could not be parsed by nu-check' }}",
+                path.to_string_lossy()
+            ))
+            .output()?;
+        let findings = String::from_utf8_lossy(&output.stdout).trim().to_string();
+        Ok(LintResult::findings(findings))
+    }
+}
